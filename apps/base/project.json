@@ -4,8 +4,10 @@
   "prefix": "app",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nrwl/angular:webpack-browser",
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/base",
         "index": "apps/base/src/index.html",
@@ -13,9 +15,18 @@
         "polyfills": "apps/base/src/polyfills.ts",
         "tsConfig": "apps/base/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/base/src/favicon.ico", "apps/base/src/assets"],
-        "styles": ["apps/base/src/styles.scss"],
-        "scripts": []
+        "assets": [
+          "apps/base/src/favicon.ico",
+          "apps/base/src/assets"
+        ],
+        "styles": [
+          "apps/base/src/styles.scss"
+        ],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/base/webpack.config.js"
+        },
+        "commonChunk": false
       },
       "configurations": {
         "production": {
@@ -37,7 +48,10 @@
               "with": "apps/base/src/environments/environment.prod.ts"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/base/webpack.prod.config.js"
+          }
         },
         "development": {
           "buildOptimizer": false,
@@ -51,7 +65,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nrwl/angular:webpack-server",
       "configurations": {
         "production": {
           "browserTarget": "base:build:production"
@@ -60,23 +74,33 @@
           "browserTarget": "base:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
+      }
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "ngx-build-plus:extract-i18n",
       "options": {
-        "browserTarget": "base:build"
+        "browserTarget": "base:build",
+        "extraWebpackConfig": "apps/base/webpack.config.js"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["apps/base/**/*.ts", "apps/base/**/*.html"]
+        "lintFilePatterns": [
+          "apps/base/**/*.ts",
+          "apps/base/**/*.html"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/base"],
+      "outputs": [
+        "coverage/apps/base"
+      ],
       "options": {
         "jestConfig": "apps/base/jest.config.ts",
         "passWithNoTests": true
